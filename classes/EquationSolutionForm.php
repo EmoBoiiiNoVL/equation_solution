@@ -18,6 +18,6 @@ class EquationSolutionForm extends \moodleform
         $mform->addElement('text', 'c', get_string('variable_c','block_equation_solution'));
         $mform->setType('c', PARAM_INT);
 
-        $this->add_action_buttons();
+        $this->add_action_buttons(false, 'Найти решение');
     }
 }

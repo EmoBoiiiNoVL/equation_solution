@@ -1,33 +1,37 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 use block_equation_solution\EqRoot;
 
 class block_equation_solution extends block_base
 {
-    public function init() {
+    public function init()
+    {
         $this->title = get_string('pluginname', 'block_equation_solution');
     }
 
-    public function get_content() {
+    public function get_content()
+    {
 
         $form = new \block_equation_solution\EquationSolutionForm();
 
         $result = '';
-        if($data = $form->get_data()){
+        if ($data = $form->get_data()) {
             $result = EqRoot::eq_root($data);
         }
 
         $form->render();
-        $this->content =  new stdClass;
+        $this->content = new stdClass;
         $this->content->text = $form->render();
-        $this->content->footer = implode(",", (array)$result);
+        $this->content->footer = $result . $this->urlHistory();
 
         return $this->content;
+
     }
 
 
-    public function applicable_formats() {
+    public function applicable_formats()
+    {
         return [
             'admin' => false,
             'site-index' => true,
@@ -50,12 +54,12 @@ class block_equation_solution extends block_base
         $mform->addElement('text', 'c', get_string('variable_c'));
         $mform->setType('c', PARAM_INT);
 
-        $mform->addElement('button', 'send', get_string('find_x'));
+        $mform->addElement('button', 'result', 'Найти решение');
     }
 
     function eq_roots($a, $b, $c)
     {
-        if (isset($_GET['send'])) {
+        if (isset($_GET['result'])) {
             $a = $_POST['variable_a'];
             $b = $_POST['variable_b'];
             $c = $_POST['variable_c'];
@@ -75,7 +79,14 @@ class block_equation_solution extends block_base
             echo "<br>";
             echo "x2 = ";
             echo(((-1) * $b - sqrt($d)) / (2 * $a));
+            echo "<br>";
         }
+    }
+
+    private function urlHistory(): string
+    {
+        $url = new moodle_url('/blocks/equation_solution/history.php');
+        return html_writer::link($url->out(), 'История');
     }
 
 

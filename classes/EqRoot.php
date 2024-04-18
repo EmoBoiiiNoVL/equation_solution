@@ -20,6 +20,7 @@ class EqRoot
             return "Решения нет!";
         }
 
+
         $x1 = 0;
         $x2 = 0;
 
@@ -36,17 +37,22 @@ class EqRoot
             $result = "x1 = {$x1}<br>";
 
             $x2 = (((-1) * $b - sqrt($d)) / (2 * $a));
-            $result .= "x2 = {$x2}";
+            $result .= "x2 = {$x2}<br>";
         }
 
         self::WorkWithDataBase($a, $b, $c, $x1, $x2);
-
         return $result;
     }
 
     private static function WorkWithDataBase($a, $b, $c, $x1, $x2)
     {
         global $DB;
-        $DB->
+        $DB->insert_record('block_equation_solution', [
+            'a' => $a,
+            'b' => $b,
+            'c' => $c,
+            'x1' => $x1,
+            'x2' => $x2,
+        ]);
     }
 }
